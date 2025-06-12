@@ -114,6 +114,9 @@ function closeTOC() {
   }, 300);
 }
 
+function showOfflineContentModal() {
+  document.getElementById('offlineContentModal').style.display = 'flex';
+}
 
 
 
@@ -1537,4 +1540,107 @@ if (installBtn) {
 }
 
 
+async function downloadSelectedAssets() {
+  const selected = Array.from(document.querySelectorAll('#offlineContentModal input[type="checkbox"]:checked'))
+    .map(cb => cb.value);
+
+  const assetMap = {
+    cataract: [
+      './cataractPage.html',
+      './videos/Cataract.mp4',
+      './images/icons_pic/Cataract.png'
+    ],
+    visualAcuity: [
+      './visualAcuityPage.html',
+      './videos/VisualAcuity.mp4',
+      './images/icons_pic/VisualAcuity.png'
+    ],
+    directOphthalmoscopy: [
+      './directOphthalmoscopy.html',
+      './videos/DirectOphthalmoscopy.mp4',
+      './images/icons_pic/DirectOphthalmoscopy.png'
+    ],
+    frontOfEye: [
+      './frontOfEyePage.html',
+      './videos/AnteriorSegment.mp4',
+      './AnteriorSegmentQuiz/html/index.html',
+      './AnteriorSegmentQuiz/html/images/case1_eye.png',
+      './AnteriorSegmentQuiz/html/images/case2_eye.png',
+      './AnteriorSegmentQuiz/html/images/case3_eye.png',
+      './AnteriorSegmentQuiz/html/images/case4_eye.png',
+      './AnteriorSegmentQuiz/html/images/case5_eye.png',
+      './AnteriorSegmentQuiz/html/images/case6_eye.png',
+      './AnteriorSegmentQuiz/html/images/case7_eye.png',
+      './AnteriorSegmentQuiz/html/images/case8_eye.png',
+      './AnteriorSegmentQuiz/html/images/case9_eye.png',
+      './AnteriorSegmentQuiz/html/images/case10_eye.png',
+      './AnteriorSegmentQuiz/html/images/case11_eye.png',
+      './AnteriorSegmentQuiz/html/images/case12_eye.png'
+    ],
+    interactiveLearning: [
+      './interactiveLearningPage.html',
+      './images/icons_pic/Interactive.png'
+    ],
+    atomsCard: [
+      './atomsCardPage.html',
+      './images/Anatomy1.png',
+      './images/Anatomy2.png',
+      './images/Fundus.png',
+      './images/Glaucoma.png',
+      './images/Refract.png'
+    ],
+    pupils: [
+      './pupilsPage.html',
+      './videos/Pupil/PupilExam.mp4',
+      './videos/Pupil/PupilExamPEC.mp4',
+      './videos/Pupil/PupilPathways.mp4',
+      './images/icons_pic/Pupils.png'
+    ],
+    fundalReflex: [
+      './fundalReflexPage.html',
+      './images/icons_pic/FundalReflex.png'
+    ],
+    rapd: [
+      './rapdTestVideoPage.html',
+      './videos/Pupil/RAPDTest.mp4'
+    ],
+    childhoodEyeScreening: [
+      './childhoodEyeScreeningPage.html',
+      './videos/USAID/HowtoArclight.mp4',
+      './videos/USAID/AssessmentVision.mp4',
+      './videos/USAID/NormalAbnormal.mp4'
+    ],
+    howToUseArclight: [
+      './howToUseArclightVideoPage.html',
+      './images/HowToUse.png'
+    ],
+    mobilePhoneAttachment: [
+      './phoneAttachmentVideoPage.html'
+    ],
+    mires: [
+      './miresPage.html'
+    ],
+    morph: [
+      './morphPage.html'
+    ],
+    squintPalsy: [
+      './squintPalsyPage.html'
+    ],
+    caseBasedLearning: [
+      './caseBasedLearningPage.html',
+      './images/CaseStudy.png',
+      './images/CaseStudy2.png'
+    ],
+    anteriorSegmentVideo: [
+      './anteriorSegmentVideoPage.html'
+    ]
+  };
+
+  const assetsToCache = selected.flatMap(key => assetMap[key] || []);
+  const sw = await navigator.serviceWorker.ready;
+  sw.active.postMessage({ type: 'CACHE_ASSETS', payload: assetsToCache });
+
+  alert('Download started in background');
+  document.getElementById('offlineContentModal').style.display = 'none';
+}
 
