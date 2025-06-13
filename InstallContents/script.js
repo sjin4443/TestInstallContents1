@@ -118,6 +118,10 @@ function showOfflineContentModal() {
   document.getElementById('offlineContentModal').style.display = 'flex';
 }
 
+function closeOfflineContentModal() {
+  document.getElementById('offlineContentModal').style.display = 'none';
+}
+
 
 
 
@@ -234,6 +238,24 @@ installBtn.addEventListener('click', async () => {
 
   }
 
+  const installIconBtn = document.getElementById('installIconBtn');
+if (installIconBtn) {
+  installIconBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+      deferredPrompt = null;
+    } else {
+      alert("App is already installed or this browser doesn't support installation.");
+    }
+  });
+}
+
 
 
 
@@ -254,21 +276,21 @@ installBtn.addEventListener('click', async () => {
       showPage('dashboard');
     });
   }
-});
 
-// Back button listener
-const backBtnGlobal = document.getElementById('backBtnGlobal');
-if (backBtnGlobal) {
-  backBtnGlobal.addEventListener('click', () => {
-  const prevPage = pageHistory.pop();
-  if (prevPage) {
-    showPage(prevPage, true);   // ← pass true so no re-push
-  } else {
-    alert("No previous page found.");
+  // Back button listener
+  const backBtnGlobal = document.getElementById('backBtnGlobal');
+  if (backBtnGlobal) {
+    backBtnGlobal.addEventListener('click', () => {
+      if (pageHistory.length > 0) {
+        const prevPage = pageHistory.pop();
+        showPage(prevPage, true);
+      } else {
+        showPage('dashboard'); // fallback if no history
+      }
+    });
   }
 });
 
-}
 
 // Eyes / Ears tab click handlers
 const eyesBtn = document.getElementById('eyesTab');
@@ -346,6 +368,20 @@ childhoodCards.forEach(card => {
   });
 });
 
+
+// Show/hide title bar depending on page
+const hideTitleBarPages = ['splashScreen', 'registerPage'];
+const titleBar = document.getElementById('titleBar');
+const spacer = document.getElementById('titleBarSpacer');
+if (titleBar && spacer) {
+  if (hideTitleBarPages.includes(pageId)) {
+    titleBar.style.display = 'none';
+    spacer.style.display = 'none';
+  } else {
+    titleBar.style.display = 'flex';
+    spacer.style.display = 'block';
+  }
+}
 
 
 
